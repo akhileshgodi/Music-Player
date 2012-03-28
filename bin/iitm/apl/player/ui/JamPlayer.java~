@@ -2,7 +2,6 @@ package iitm.apl.player.ui;
 
 import iitm.apl.player.BKTree;
 
-
 import iitm.apl.player.LevenshteinsDistance;
 import iitm.apl.player.Song;
 import iitm.apl.player.ThreadedPlayer;
@@ -29,7 +28,7 @@ import javax.swing.GroupLayout.Alignment;
  */
 public class JamPlayer {
 
-		// UI Items
+	// UI Items
 	private JFrame mainFrame;
 	private PlayerPanel pPanel;
 

@@ -55,7 +55,7 @@ public class ThreadedPlayer implements Runnable {
 	@SuppressWarnings("unused")
 	private void dispose() {
 		running = false;
-		state = State.STOP;
+		setState(State.STOP);
 	}
 
 	public State getState() {
@@ -68,12 +68,9 @@ public class ThreadedPlayer implements Runnable {
 	public void setState(State st) {
 		stateLock.lock();
 		try {
-			if( st == State.PAUSE && state != State.PAUSE )
-			{
-				state = st;
-				notPaused.signal();
-			}
 			state = st;
+			if (st != State.PAUSE)
+				notPaused.signal();
 		} finally {
 			stateLock.unlock();
 		}
@@ -196,7 +193,6 @@ public class ThreadedPlayer implements Runnable {
 			if (song != null)
 				hasSong.signal();
 		} finally {
-			stateLock.unlock();
 			songLock.unlock();
 		}
 	}
