@@ -1,12 +1,19 @@
 package iitm.apl.player.ui;
 
+import iitm.apl.player.BKTree;
+
+import iitm.apl.player.LevenshteinsDistance;
 import iitm.apl.player.Song;
 import iitm.apl.player.ThreadedPlayer;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -227,7 +234,25 @@ public class JamPlayer {
 		return songs;
 	}
 
-	public static void main(String[] args) {
+	public static <T> void main(String[] args) throws IOException 
+	{
+		/*This is just a test run. @Karthik : Remove these lines later.*/
+		
+		File input = new File("/home/akhilesh/Downloads/swampy-2.0/words.txt");
+		BufferedReader reader = new BufferedReader(new FileReader(input));
+	    String line = null;
+
+		BKTree<String> tree = new BKTree<String>(new LevenshteinsDistance<String>());
+	    while ((line=reader.readLine()) != null) 
+	    {
+	    	tree.add(line);
+        }
+	    reader.close();
+	    
+	    HashMap<String, Integer> queryMap = tree.query("remote", 6);
+		System.out.println("Query Map : " + queryMap);
+		/*-------------------------------------------------------------*/
+		
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {

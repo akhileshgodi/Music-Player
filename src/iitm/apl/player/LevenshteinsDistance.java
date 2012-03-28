@@ -4,13 +4,13 @@ package iitm.apl.player;
  * @author : Akhilesh Godi (CS10B037)
  * Implementing the Levenshtein's distance  
  */
-public class LevenshteinsDistance 
+public class LevenshteinsDistance <T>
 {
-	public int getDistance(Object object1, Object object2) 
+	public int getDistance(T element, T element2) 
 	{
 		
-		String string1 = (String) object1;
-		String string2 = (String) object2;
+		String string1 = (String) element;
+		String string2 = (String) element2;
 		
 		int distance[][]; 	// Distance Matrix
         int n, m; 			// Length of first , second strings respectively
