@@ -12,7 +12,6 @@ import javax.swing.table.AbstractTableModel;
 public class LibraryTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 8230354699902953693L;
 
-	// TODO: Change to your implementation of Trie/BK-Tree
 	private Vector<Song> songListing;
 
 	LibraryTableModel() {

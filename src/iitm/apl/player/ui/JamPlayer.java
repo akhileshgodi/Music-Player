@@ -2,10 +2,10 @@ package iitm.apl.player.ui;
 
 import iitm.apl.player.BKTree;
 
-
 import iitm.apl.player.LevenshteinsDistance;
 import iitm.apl.player.Song;
 import iitm.apl.player.ThreadedPlayer;
+import iitm.apl.player.searchSong;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -29,7 +29,7 @@ import javax.swing.GroupLayout.Alignment;
  */
 public class JamPlayer {
 
-		// UI Items
+	// UI Items
 	private JFrame mainFrame;
 	private PlayerPanel pPanel;
 
@@ -38,6 +38,7 @@ public class JamPlayer {
 
 	private Thread playerThread = null;
 	private ThreadedPlayer player = null;
+	private String search = new String("");
 
 	public JamPlayer() {
 		// Create the player
@@ -104,9 +105,20 @@ public class JamPlayer {
 		searchText.addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
-				// TODO: Handle the case when the text field has been modified.
-				// Optional: Can you update the search "incrementally" i.e. as
-				// and when the user changes the search text?
+				char s = arg0.getKeyChar();
+				if (s != '\b')
+					search = search.concat(s + "");
+				else {
+					StringBuffer sb = new StringBuffer(search);
+					sb.replace(search.length() - 1, search.length(), "");
+					search = sb.toString();
+				}
+				if (!search.isEmpty()) {
+					Vector<String> result = searchSong.search(search);
+					for (String it : result) {
+						System.out.println(it);
+					}
+				}
 			}
 
 			@Override
@@ -226,34 +238,32 @@ public class JamPlayer {
 		PlayListMakerDialog dialog = new PlayListMakerDialog(this);
 		dialog.setVisible(true);
 	}
-	
-	public Vector<Song> getSongList()
-	{
+
+	public Vector<Song> getSongList() {
 		Vector<Song> songs = new Vector<Song>();
-		for(  int i = 0; i< libraryModel.getRowCount(); i++)
+		for (int i = 0; i < libraryModel.getRowCount(); i++)
 			songs.add(libraryModel.get(i));
 		return songs;
 	}
 
-	public static <T> void main(String[] args) throws IOException 
-	{
-		/*This is just a test run. @Karthik : Remove these lines later.*/
-		
-		File input = new File("/home/akhilesh/Downloads/swampy-2.0/words.txt");
-		BufferedReader reader = new BufferedReader(new FileReader(input));
-	    String line = null;
+	public static <T> void main(String[] args) throws IOException {
+		/* This is just a test run. @Karthik : Remove these lines later. */
 
-		BKTree<String> tree = new BKTree<String>(new LevenshteinsDistance<String>());
-	    while ((line=reader.readLine()) != null) 
-	    {
-	    	tree.add(line);
-        }
-	    reader.close();
-	    
-	    HashMap<String, Integer> queryMap = tree.query("remote", 6);
+		File input = new File("./test.txt");
+		BufferedReader reader = new BufferedReader(new FileReader(input));
+		String line = null;
+
+		BKTree<String> tree = new BKTree<String>(
+				new LevenshteinsDistance<String>());
+		while ((line = reader.readLine()) != null) {
+			tree.add(line);
+		}
+		reader.close();
+
+		HashMap<String, Integer> queryMap = tree.query("remote", 6);
 		System.out.println("Query Map : " + queryMap);
 		/*-------------------------------------------------------------*/
-		
+
 		// Schedule a job for the event-dispatching thread:
 		// creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
