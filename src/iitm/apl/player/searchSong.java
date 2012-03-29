@@ -7,10 +7,8 @@ import java.util.Set;
 import java.util.Vector;
 
 public class searchSong {
-	public static Vector<String> search(String s) {
-		BKTree<String> tree = new BKTree<String>(
-				new LevenshteinsDistance<String>());
-		System.out.println(s);
+	public static Vector<String> search(String s, BKTree<String> tree) {
+
 		HashMap<String, Integer> queryMap = tree.query(s, s.length());
 		Vector<String> queryResult = new Vector<String>();
 		Set<Map.Entry<String, Integer>> result = queryMap.entrySet();

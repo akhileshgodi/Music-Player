@@ -39,6 +39,8 @@ public class JamPlayer {
 	private Thread playerThread = null;
 	private ThreadedPlayer player = null;
 	private String search = new String("");
+	private static BKTree<String> tree = new BKTree<String>(
+			new LevenshteinsDistance<String>());
 
 	public JamPlayer() {
 		// Create the player
@@ -114,7 +116,7 @@ public class JamPlayer {
 					search = sb.toString();
 				}
 				if (!search.isEmpty()) {
-					Vector<String> result = searchSong.search(search);
+					Vector<String> result = searchSong.search(search, tree);
 					for (String it : result) {
 						System.out.println(it);
 					}
@@ -253,8 +255,6 @@ public class JamPlayer {
 		BufferedReader reader = new BufferedReader(new FileReader(input));
 		String line = null;
 
-		BKTree<String> tree = new BKTree<String>(
-				new LevenshteinsDistance<String>());
 		while ((line = reader.readLine()) != null) {
 			tree.add(line);
 		}
