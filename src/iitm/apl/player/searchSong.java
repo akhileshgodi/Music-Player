@@ -7,12 +7,14 @@ import java.util.Set;
 import java.util.Vector;
 
 public class searchSong {
-	public static Vector<String> search(String s, BKTree<String> tree) {
+	public static Vector<Song> search(String s, BKTree tree) {
 
-		HashMap<String, Integer> queryMap = tree.query(s, s.length());
-		Vector<String> queryResult = new Vector<String>();
-		Set<Map.Entry<String, Integer>> result = queryMap.entrySet();
-		for (Entry<String, Integer> it : result) {
+		HashMap<Song, Integer> queryMap = tree.query(s, s.length());
+		Vector<Song> queryResult = new Vector<Song>();
+		Set<Map.Entry<Song, Integer>> result = queryMap.entrySet();
+		for (Entry<Song, Integer> it : result) {
+			// Currently blindly everything a a edit distance of 3 being
+			// displayed
 			if (it.getValue().intValue() <= 3)
 				queryResult.add(it.getKey());
 		}

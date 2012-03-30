@@ -18,6 +18,12 @@ public class LibraryTableModel extends AbstractTableModel {
 		songListing = new Vector<Song>();
 	}
 
+	// Added a method to clear the current table contents
+	public void clear() {
+		songListing.clear();
+		fireTableDataChanged();
+	}
+
 	public void add(Song song) {
 		songListing.add(song);
 		fireTableDataChanged();

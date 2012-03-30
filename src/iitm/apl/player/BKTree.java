@@ -5,31 +5,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import java.util.Map;
+public class BKTree {
+	private Node root;
+	private HashMap<Song, Integer> match;
+	private LevenshteinsDistance<String> distance;
 
-public class BKTree<T> {
-	private Node root; // Root of the node
-	private HashMap<T, Integer> match; // Match to the string! Infact make it
-										// generic
-	private LevenshteinsDistance<T> distance;
-
-	/*---------------------------------------------------*/
-	// This is the node class and inside this
-	// operations that are to be done on elements in the tree.
 	private class Node {
-		T element;
-		HashMap<Integer, Node> children; // Has children with different
-											// distances in a map.
+		Song element;
+		HashMap<Integer, Node> children;
 
-		public Node(T element) {
-			// TODO Auto-generated constructor stub
-			this.element = element;
+		public Node(Song element2) {
+
+			this.element = element2;
 			children = new HashMap<Integer, Node>();
 		}
 
-		public void addToTree(T element) {
-			// TODO Auto-generated method stub
-			int levDistance = distance.getDistance(element, this.element);
+		public void addToTree(Song element) {
+
+			int levDistance = distance.getDistance(element.getTitle(),
+					this.element.getTitle());
 			Node child = children.get(levDistance);
 
 			if (child == null)
@@ -38,17 +32,15 @@ public class BKTree<T> {
 				child.addToTree(element);
 		}
 
-		public Set<T> query(T element, int boundary, Map<T, Integer> match) {
-			// TODO Auto-generated method stub
-			int distanceAtNode = distance.getDistance(element, this.element);
-			Set<T> collectedObjs = new HashSet<T>();
+		public Set<Song> query(String element, int boundary,
+				HashMap<Song, Integer> match) {
+			int distanceAtNode = distance.getDistance(element,
+					this.element.getTitle());
+			Set<Song> collectedObjs = new HashSet<Song>();
 			if (distanceAtNode <= boundary) {
 				match.put(this.element, distanceAtNode);
 				collectedObjs.add(this.element);
-				System.out.println(collectedObjs); // How do we sort it then? We
-													// need dist. So we'll have
-													// to keep a track of that
-													// also.
+
 			}
 
 			for (int dist = distanceAtNode - boundary; dist <= boundary
@@ -58,28 +50,25 @@ public class BKTree<T> {
 					child.query(element, boundary, match);
 				}
 			}
-			return collectedObjs; // TODO : Sort these objects based on their
-									// Leveinshteen's Distance
+			return collectedObjs;
 		}
 
 	}
 
-	/*------------------------------------------------------*/
-
-	public BKTree(LevenshteinsDistance<T> distance) {
+	public BKTree(LevenshteinsDistance<String> distance) {
 		root = null;
 		this.distance = distance;
 	}
 
-	public void add(T element) {
+	public void add(Song element) {
 		if (root != null)
 			root.addToTree(element);
 		else
 			root = new Node(element);
 	}
 
-	public HashMap<T, Integer> query(T search, int boundary) {
-		match = new HashMap<T, Integer>();
+	public HashMap<Song, Integer> query(String search, int boundary) {
+		match = new HashMap<Song, Integer>();
 		root.query(search, boundary, match);
 		return match;
 	}
