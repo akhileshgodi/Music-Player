@@ -23,7 +23,8 @@ public class BKTree {
 		public void addToTree(Song element) {
 
 			int levDistance = distance.getDistance(element.getTitle()
-					.toLowerCase(), this.element.getTitle().toLowerCase());
+					.toLowerCase().split("\\s+")[0], this.element.getTitle()
+					.toLowerCase().split("\\s+")[0]);
 			Node child = children.get(levDistance);
 
 			if (child == null)
@@ -35,7 +36,7 @@ public class BKTree {
 		public Set<Song> query(String element, int boundary,
 				HashMap<Song, Integer> match) {
 			int distanceAtNode = distance.getDistance(element, this.element
-					.getTitle().toLowerCase());
+					.getTitle().toLowerCase().split("\\s+")[0]);
 			Set<Song> collectedObjs = new HashSet<Song>();
 			if (distanceAtNode <= boundary) {
 				match.put(this.element, distanceAtNode);
