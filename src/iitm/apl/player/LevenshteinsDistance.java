@@ -3,8 +3,10 @@ package iitm.apl.player;
 /**
  * @author : Akhilesh Godi (CS10B037) Implementing the Levenshtein's distance
  */
-public class LevenshteinsDistance<E> {
-	public int getDistance(E element, E element2) {
+public class LevenshteinsDistance<E> 
+{
+	public int getDistance(E element, E element2) 
+	{
 
 		String string1 = (String) element;
 		String string2 = (String) element2;
