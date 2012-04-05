@@ -2,64 +2,76 @@ package iitm.apl.player;
 
 import java.util.HashMap;
 
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.Vector;
 
 /*
  * The Class which implements the operations on the BKTree
  */
 public class BKTree {
-	private Node root;
+	public Node root;
 	private HashMap<Song, Integer> match;
+	private HashMap<String, Integer> matches;
+
 	private LevenshteinsDistance<String> distance;
 
 	/*
 	 * The class whose objects are the nodes in the TREE
 	 */
-	private class Node {
+	class Node {
 
-		SongEntry element;
-		HashMap<Integer, Node> children;
+		String songAtNode; 	// Will have the part of the Song Name.
+		Vector<Song> songs; // The pointers to all songs which have that part of
+							// the word in the song.
+		HashMap<Integer, Node> children;// And obviously the set of all Nodes
+										// which are it's children
 
-		public Node(SongEntry element2) {
-
-			this.element = element2;
-			children = new HashMap<Integer, Node>();
+		public Node(String splitWord, Song songTitle) {
+			this.songAtNode = splitWord;
+			children = new HashMap<Integer, BKTree.Node>();
+			songs = new Vector<Song>();
 		}
 
-		public void addToTree(SongEntry element) {
+		/*--------------------------------------------------------------------------------------------------*/
 
-			int levDistance = distance.getDistance(element.name.toLowerCase(),
-					this.element.name);
+		public void addToTree(String songPart, Song songTitle) {
+			int levDistance = distance.getDistance(songPart.toLowerCase(),
+					songAtNode);
 			Node child = children.get(levDistance);
-
-			if (child == null)
-				children.put(levDistance, new Node(element));
-			else
-
-				child.addToTree(element);
-
+			if (child == null) 
+			{
+				Node addedNode = new Node(songPart, songTitle);
+				this.children.put(levDistance, addedNode);
+				addedNode.songs.add(songTitle);
+				System.out.println(addedNode.songs);
+				System.out.println("-------Added------");
+			} 
+			
+			if(child!=null && child.songAtNode!= songPart)
+				child.addToTree(songPart, songTitle);
+			else if(child!=null && child.songAtNode == songPart)
+				child.songs.add(songTitle);
 		}
 
-		public Set<Song> query(String element, int boundary,
-				HashMap<Song, Integer> match) {
 
-			Set<Song> collectedObjs = new HashSet<Song>();
+		public Vector<Song> querry(String element, int boundary,
+				HashMap<String, Integer> match, Vector<Song> collectedObjs) {
 
-			int distanceAtNode = distance.getDistance(element,
-					this.element.name);
+
+			int distanceAtNode = distance.getDistance(element, this.songAtNode);
 
 			if (distanceAtNode <= boundary) {
-				match.put(this.element.song, distanceAtNode);
-				collectedObjs.add(this.element.song);
-
+				match.put(this.songAtNode, distanceAtNode);
+				
+				for(int i = 0 ; i < songs.size(); i++)
+					collectedObjs.addAll(songs);
 			}
 
 			for (int dist = distanceAtNode - boundary; dist <= boundary
 					+ distanceAtNode; dist++) {
 				Node child = children.get(dist);
 				if (child != null) {
-					child.query(element, boundary, match);
+					child.querry(element, boundary, match , collectedObjs);
 				}
 			}
 
@@ -74,36 +86,44 @@ public class BKTree {
 
 	public void add(Song element) {
 		String split[] = element.getTitle().toLowerCase().split("\\s+");
-		int i;
-		for (i = 0; i < split.length; i++) {
-			SongEntry entry = new SongEntry(element, split[i]);
+		for (int i = 0; i < split.length; i++) {
+
+			// SongEntry entry = new SongEntry(element, split[i]);
+			String part = split[i];
 			boolean acceptable = true;
 			int j;
-			for (j = 0; j < entry.name.length(); j++) {
-
-				if (!((entry.name.charAt(j) >= 'a' && entry.name.charAt(j) <= 'z') || (entry.name
-						.charAt(j) >= '0' && entry.name.charAt(j) <= '9'))) {
+			for (j = 0; j < part.length(); j++) {
+				if (!((part.charAt(j) >= 'a' && part.charAt(j) <= 'z') || (part
+						.charAt(j) >= '0' && part.charAt(j) <= '9'))) {
 					acceptable = false;
 					break;
 				}
 
 			}
 			if (acceptable) {
-				if (root != null) {
-					System.out.println(entry.name);
-					root.addToTree(entry);
-				} else
-					root = new Node(entry);
-
+				if (root != null)
+					root.addToTree(part, element);
+				else {
+					root = new Node(part, element);
+					System.out.println(root.songAtNode);
+				}
 			}
 		}
-		root.addToTree(new SongEntry(element, element.getTitle().toLowerCase()));
+		root.songs.add(element);
+		root.addToTree(element.getTitle().toLowerCase(), element);
 	}
 
-	public HashMap<Song, Integer> query(String search, int boundary) {
-		match = new HashMap<Song, Integer>();
-		root.query(search, boundary, match);
+	public Vector<Song> query(String search, int boundary) {
+		matches = new HashMap<String, Integer>();
+		Vector<Song> results = new Vector<Song>();
+		root.querry(search, boundary, matches, results);
+		System.out.println("Matches are :  " + results);
+		return results;
+	}
+
+	public HashMap<Song, Integer> getMatch() {
 		return match;
 	}
 
 }
+

@@ -8,7 +8,7 @@ import java.util.Vector;
 /*
  * Class which implements the search by invoking the call to the BKTree
  */
-public class searchSong {
+public class SearchSong {
 	/*
 	 * This takes a String searches in the BKTree for the closest match
 	 * available.
@@ -18,7 +18,8 @@ public class searchSong {
 	 * @return: Vector<Song>
 	 */
 
-	public static Vector<Song> search(String s, BKTree tree) {
+	public static Vector<Song> search(String s, BKTree tree) 
+	{
 
 		HashMap<Song, Integer> queryMap = tree.query(s, s.length());
 		Vector<Song> queryResult = new Vector<Song>();
@@ -29,10 +30,10 @@ public class searchSong {
 
 		for (Song it : sorted_map.keySet()) {
 
-			if (sorted_map.get(it).intValue() <= 3)
+			if (sorted_map.get(it).intValue() <= 1)
 				queryResult.add(it);
 		}
-
+		System.out.println(queryResult);
 		return queryResult;
 	}
 }
