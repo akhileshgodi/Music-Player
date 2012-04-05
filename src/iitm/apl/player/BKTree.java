@@ -12,20 +12,19 @@ public class BKTree {
 
 	private class Node {
 
-		Song element;
+		SongEntry element;
 		HashMap<Integer, Node> children;
 
-		public Node(Song element2) {
+		public Node(SongEntry element2) {
 
 			this.element = element2;
 			children = new HashMap<Integer, Node>();
 		}
 
-		public void addToTree(Song element) {
+		public void addToTree(SongEntry element) {
 
-			int levDistance = distance.getDistance(element.getTitle()
-					.toLowerCase().split("\\s+")[0], this.element.getTitle()
-					.toLowerCase().split("\\s+")[0]);
+			int levDistance = distance.getDistance(element.name.toLowerCase(),
+					this.element.name);
 			Node child = children.get(levDistance);
 
 			if (child == null)
@@ -41,12 +40,12 @@ public class BKTree {
 
 			Set<Song> collectedObjs = new HashSet<Song>();
 
-			int distanceAtNode = distance.getDistance(element, this.element
-					.getTitle().toLowerCase().split("\\s+")[0]);
+			int distanceAtNode = distance.getDistance(element,
+					this.element.name);
 
 			if (distanceAtNode <= boundary) {
-				match.put(this.element, distanceAtNode);
-				collectedObjs.add(this.element);
+				match.put(this.element.song, distanceAtNode);
+				collectedObjs.add(this.element.song);
 
 			}
 
@@ -68,10 +67,16 @@ public class BKTree {
 	}
 
 	public void add(Song element) {
-		if (root != null)
-			root.addToTree(element);
-		else
-			root = new Node(element);
+		String split[] = element.getTitle().split("\\s+");
+		int i;
+		for (i = 0; i < split.length; i++) {
+			SongEntry entry = new SongEntry(element, split[i]);
+			if (root != null)
+				root.addToTree(entry);
+			else
+				root = new Node(entry);
+		}
+		root.addToTree(new SongEntry(element, element.getTitle()));
 	}
 
 	public HashMap<Song, Integer> query(String search, int boundary) {
