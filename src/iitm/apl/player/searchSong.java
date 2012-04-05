@@ -5,7 +5,18 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
+/*
+ * Class which implements the search by invoking the call to the BKTree
+ */
 public class searchSong {
+	/*
+	 * This takes a String searches in the BKTree for the closest match
+	 * available.
+	 * 
+	 * @params : String, BKTree
+	 * 
+	 * @return: Vector<Song>
+	 */
 
 	public static Vector<Song> search(String s, BKTree tree) {
 
@@ -17,7 +28,7 @@ public class searchSong {
 		sorted_map.putAll(queryMap);
 
 		for (Song it : sorted_map.keySet()) {
-			// A problem for songs of smaller lengths
+
 			if (sorted_map.get(it).intValue() <= 3)
 				queryResult.add(it);
 		}
@@ -26,6 +37,10 @@ public class searchSong {
 	}
 }
 
+/*
+ * A comparator class which compares two songs based on the Edit distance from a
+ * given String
+ */
 class ValueComparator implements Comparator<Song> {
 
 	HashMap<Song, Integer> sort;

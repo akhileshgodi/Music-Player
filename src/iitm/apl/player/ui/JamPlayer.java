@@ -128,8 +128,7 @@ public class JamPlayer {
 					for (Song it : song)
 						libraryModel.add(it);
 				} else if (!enter) {
-					// Change everything to lower case while searching to make
-					// search case insensitive
+
 					Vector<Song> result = searchSong.search(
 							search.toLowerCase(), tree);
 

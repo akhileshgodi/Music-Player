@@ -5,11 +5,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+/*
+ * The Class which implements the operations on the BKTree
+ */
 public class BKTree {
 	private Node root;
 	private HashMap<Song, Integer> match;
 	private LevenshteinsDistance<String> distance;
 
+	/*
+	 * The class whose objects are the nodes in the TREE
+	 */
 	private class Node {
 
 		SongEntry element;
