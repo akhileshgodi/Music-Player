@@ -5,7 +5,7 @@ import iitm.apl.player.BKTree;
 import iitm.apl.player.LevenshteinsDistance;
 import iitm.apl.player.Song;
 import iitm.apl.player.ThreadedPlayer;
-import iitm.apl.player.searchSong;
+import iitm.apl.player.SearchSong;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -133,7 +133,7 @@ public class JamPlayer {
 					int i;
 					for (i = 0; i < searchSplit.length; i++) {
 						System.out.println(searchSplit[i]);
-						Vector<Song> list = searchSong.search(
+						Vector<Song> list = SearchSong.search(
 								searchSplit[i].toLowerCase(), tree);
 						if (i != 0) {
 							int j;
