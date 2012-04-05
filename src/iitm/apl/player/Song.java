@@ -22,7 +22,9 @@ public class Song {
 
 	/**
 	 * Create a metadata-instance
-	 * @param file: The file on disk corresponding to the music file
+	 * 
+	 * @param file
+	 *            : The file on disk corresponding to the music file
 	 */
 	public Song(File file) {
 		this.file = file;
@@ -61,7 +63,7 @@ public class Song {
 	public String getAlbum() {
 		return tag.getFirst(FieldKey.ALBUM);
 	}
-	
+
 	public int getDuration() {
 		return header.getTrackLength();
 	}

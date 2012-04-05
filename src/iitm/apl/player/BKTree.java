@@ -11,6 +11,7 @@ public class BKTree {
 	private LevenshteinsDistance<String> distance;
 
 	private class Node {
+
 		Song element;
 		HashMap<Integer, Node> children;
 
@@ -30,14 +31,19 @@ public class BKTree {
 			if (child == null)
 				children.put(levDistance, new Node(element));
 			else
+
 				child.addToTree(element);
+
 		}
 
 		public Set<Song> query(String element, int boundary,
 				HashMap<Song, Integer> match) {
+
+			Set<Song> collectedObjs = new HashSet<Song>();
+
 			int distanceAtNode = distance.getDistance(element, this.element
 					.getTitle().toLowerCase().split("\\s+")[0]);
-			Set<Song> collectedObjs = new HashSet<Song>();
+
 			if (distanceAtNode <= boundary) {
 				match.put(this.element, distanceAtNode);
 				collectedObjs.add(this.element);
@@ -51,9 +57,9 @@ public class BKTree {
 					child.query(element, boundary, match);
 				}
 			}
+
 			return collectedObjs;
 		}
-
 	}
 
 	public BKTree(LevenshteinsDistance<String> distance) {

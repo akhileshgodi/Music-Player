@@ -107,21 +107,27 @@ public class JamPlayer {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
 				char s = arg0.getKeyChar();
-				libraryModel.clear();
-				if (s != '\b')
+				boolean enter = true;
+				if (s != '\r' && s != '\n') {
+					enter = false;
+					libraryModel.clear();
+				}
+
+				if (s != '\b' && !enter) {
 					search = search.concat(s + "");
-				else if (!search.isEmpty()) {
+
+				} else if (!search.isEmpty() && !enter) {
 					StringBuffer sb = new StringBuffer(search);
 					sb.replace(search.length() - 1, search.length(), "");
 					search = sb.toString();
+
 				}
 				// When no search text, display the entire playlist
-				if (search.isEmpty()) {
+				if (search.isEmpty() && !enter) {
 
 					for (Song it : song)
 						libraryModel.add(it);
-				}
-				if (!search.isEmpty()) {
+				} else if (!enter) {
 					// Change everything to lower case while searching to make
 					// search case insensitive
 					Vector<Song> result = searchSong.search(
