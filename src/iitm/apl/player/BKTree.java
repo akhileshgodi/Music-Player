@@ -73,16 +73,31 @@ public class BKTree {
 	}
 
 	public void add(Song element) {
-		String split[] = element.getTitle().split("\\s+");
+		String split[] = element.getTitle().toLowerCase().split("\\s+");
 		int i;
 		for (i = 0; i < split.length; i++) {
 			SongEntry entry = new SongEntry(element, split[i]);
-			if (root != null)
-				root.addToTree(entry);
-			else
-				root = new Node(entry);
+			boolean acceptable = true;
+			int j;
+			for (j = 0; j < entry.name.length(); j++) {
+
+				if (!((entry.name.charAt(j) >= 'a' && entry.name.charAt(j) <= 'z') || (entry.name
+						.charAt(j) >= '0' && entry.name.charAt(j) <= '9'))) {
+					acceptable = false;
+					break;
+				}
+
+			}
+			if (acceptable) {
+				if (root != null) {
+					System.out.println(entry.name);
+					root.addToTree(entry);
+				} else
+					root = new Node(entry);
+
+			}
 		}
-		root.addToTree(new SongEntry(element, element.getTitle()));
+		root.addToTree(new SongEntry(element, element.getTitle().toLowerCase()));
 	}
 
 	public HashMap<Song, Integer> query(String search, int boundary) {

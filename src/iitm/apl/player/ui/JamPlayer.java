@@ -128,10 +128,25 @@ public class JamPlayer {
 					for (Song it : song)
 						libraryModel.add(it);
 				} else if (!enter) {
-
-					Vector<Song> result = searchSong.search(
-							search.toLowerCase(), tree);
-
+					Vector<Song> result = new Vector<Song>();
+					String searchSplit[] = search.split("\\s+");
+					int i;
+					for (i = 0; i < searchSplit.length; i++) {
+						System.out.println(searchSplit[i]);
+						Vector<Song> list = searchSong.search(
+								searchSplit[i].toLowerCase(), tree);
+						if (i != 0) {
+							int j;
+							Vector<Song> temp = new Vector<Song>();
+							for (j = 0; j < list.size(); j++) {
+								if (result.contains(list.get(j)))
+									temp.add(list.get(j));
+							}
+							result.clear();
+							result = temp;
+						} else
+							result = list;
+					}
 					if (result != null)
 						libraryModel.add(result);
 
