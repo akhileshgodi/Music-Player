@@ -7,7 +7,8 @@ import java.util.Vector;
 /*
  * The Class which implements the operations on the BKTree
  */
-public class BKTree {
+public class BKTree 
+{
 	public Node root;
 	private HashMap<Song, Integer> match;
 	private HashMap<String, Integer> matches;
@@ -86,8 +87,18 @@ public class BKTree {
 		this.distance = distance;
 	}
 
-	public void add(Song element) {
-		String split[] = element.getTitle().toLowerCase().split("\\s+");
+	public void add(Song element , int mode) 
+	{
+
+		String split[];
+		if(mode == 0)
+			split = element.getTitle().toLowerCase().split("\\s+");
+		else if (mode == 1)
+			split= element.getAlbum().toLowerCase().split("\\s+");
+		else if(mode == 2)
+			split = element.getArtist().toLowerCase().split("\\s+");
+		else
+			split = element.getTitle().toLowerCase().split("\\s+");
 		for (int i = 0; i < split.length; i++) {
 
 			// SongEntry entry = new SongEntry(element, split[i]);

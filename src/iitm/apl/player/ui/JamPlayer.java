@@ -21,8 +21,9 @@ import javax.swing.GroupLayout.Alignment;
  * The JamPlayer Main Class Sets up the UI, and stores a reference to a threaded
  * player that actually plays a song.
  * 
- * TODO: a) Implement the search functionality b) Implement a play-list
- * generation feature
+ * TODO: 1. Make a BK Tree based on whatever radio button is chosen. and make a new one every time
+ *  its changed.
+ *		2. Sorting as desired as and when you click the title bar. Display should be sorted by title.
  */
 public class JamPlayer {
 
@@ -38,12 +39,13 @@ public class JamPlayer {
 	private String search = new String("");
 	private Vector<Song> song;
 	private static BKTree tree = new BKTree(new LevenshteinsDistance<String>());
-
+	private int searchMode ; //0 = Title ; 1 = Album ; 2 = Artist ; Default Title
 	public JamPlayer() {
 		// Create the player
 		player = new ThreadedPlayer();
 		playerThread = new Thread(player);
 		playerThread.start();
+		searchMode = 0;
 	}
 
 	/**
@@ -74,7 +76,7 @@ public class JamPlayer {
 		}
 		song = songs;
 		for (Song it : songs)
-			tree.add(it);
+			tree.add(it,searchMode);
 		return songs;
 	}
 
