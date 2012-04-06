@@ -21,9 +21,9 @@ import javax.swing.GroupLayout.Alignment;
  * The JamPlayer Main Class Sets up the UI, and stores a reference to a threaded
  * player that actually plays a song.
  * 
- * TODO: 1. Make a BK Tree based on whatever radio button is chosen. and make a new one every time
- *  its changed.
- *		2. Sorting as desired as and when you click the title bar. Display should be sorted by title.
+ * TODO: 1. Make a BK Tree based on whatever radio button is chosen. and make a
+ * new one every time its changed. 2. Sorting as desired as and when you click
+ * the title bar. Display should be sorted by title.
  */
 public class JamPlayer {
 
@@ -38,14 +38,19 @@ public class JamPlayer {
 	private ThreadedPlayer player = null;
 	private String search = new String("");
 	private Vector<Song> song;
-	private static BKTree tree = new BKTree(new LevenshteinsDistance<String>());
-	private int searchMode ; //0 = Title ; 1 = Album ; 2 = Artist ; Default Title
+	private static BKTree treeTitle = new BKTree(
+			new LevenshteinsDistance<String>());
+	private static BKTree treeAlbum = new BKTree(
+			new LevenshteinsDistance<String>());
+	private static BKTree treeArtist = new BKTree(
+			new LevenshteinsDistance<String>());
+
 	public JamPlayer() {
 		// Create the player
 		player = new ThreadedPlayer();
 		playerThread = new Thread(player);
 		playerThread.start();
-		searchMode = 0;
+
 		song = new Vector<Song>();
 	}
 
@@ -65,7 +70,7 @@ public class JamPlayer {
 		if (selectedFile.isFile()
 				&& selectedFile.getName().toLowerCase().endsWith(".mp3")) {
 			songs.add(new Song(selectedFile));
-			
+
 			return songs;
 		} else if (selectedFile.isDirectory()) {
 			for (File file : selectedFile.listFiles(new FilenameFilter() {
@@ -76,11 +81,12 @@ public class JamPlayer {
 			}))
 				songs.add(new Song(file));
 		}
-		
-		for (Song it : songs)
-		{	
+
+		for (Song it : songs) {
 			song.add(it);
-			tree.add(it,searchMode);
+			treeTitle.add(it, 0);
+			treeAlbum.add(it, 1);
+			treeArtist.add(it, 2);
 		}
 		return songs;
 	}
@@ -107,8 +113,18 @@ public class JamPlayer {
 		mainPanel.setLayout(layout);
 
 		pPanel = new PlayerPanel(player);
+
 		JLabel searchLabel = new JLabel("Search: ");
 		JTextField searchText = new JTextField(200);
+
+		CheckboxGroup radioButtons = new CheckboxGroup();
+		final Checkbox title = new Checkbox("Title", radioButtons, true);
+		pPanel.add(title);
+		final Checkbox album = new Checkbox("Album", radioButtons, false);
+		pPanel.add(album);
+		final Checkbox artist = new Checkbox("Artist", radioButtons, false);
+		pPanel.add(artist);
+
 		searchText.setMaximumSize(new Dimension(200, 20));
 		searchText.addKeyListener(new KeyListener() {
 			@Override
@@ -139,9 +155,19 @@ public class JamPlayer {
 					String searchSplit[] = search.split("\\s+");
 					int i;
 					for (i = 0; i < searchSplit.length; i++) {
-						System.out.println(searchSplit[i]);
-						Vector<Song> list = SearchSong.search(
-								searchSplit[i].toLowerCase(), tree);
+						Vector<Song> list = new Vector<Song>();
+						if (title.getState() == true) {
+							list = SearchSong.search(
+									searchSplit[i].toLowerCase(), treeTitle);
+						}
+						if (artist.getState() == true) {
+							list = SearchSong.search(
+									searchSplit[i].toLowerCase(), treeArtist);
+						}
+						if (album.getState() == true) {
+							list = SearchSong.search(
+									searchSplit[i].toLowerCase(), treeAlbum);
+						}
 						if (i != 0) {
 							int j;
 							Vector<Song> temp = new Vector<Song>();
