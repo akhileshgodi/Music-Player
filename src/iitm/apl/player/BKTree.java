@@ -9,8 +9,6 @@ import java.util.Vector;
  */
 public class BKTree {
 	public Node root;
-	private HashMap<String, Integer> matches;
-
 	private LevenshteinsDistance<String> distance;
 
 	/*
@@ -18,11 +16,9 @@ public class BKTree {
 	 */
 	class Node {
 
-		String songAtNode; // Will have the part of the Song Name.
-		Vector<Song> songs; // The pointers to all songs which have that part of
-							// the word in the song.
-		HashMap<Integer, Node> children;// And obviously the set of all Nodes
-										// which are it's children
+		String songAtNode;
+		Vector<Song> songs;
+		HashMap<Integer, Node> children;
 
 		public Node(String splitWord, Song songTitle) {
 			this.songAtNode = splitWord;
@@ -30,18 +26,14 @@ public class BKTree {
 			songs = new Vector<Song>();
 		}
 
-		/*--------------------------------------------------------------------------------------------------*/
-
 		public void addToTree(String songPart, Song songTitle) {
-			int levDistance = distance.getDistance(songPart.toLowerCase(),
-					songAtNode);
+			int levDistance = distance.getDistance(songPart, songAtNode);
 			Node child = children.get(levDistance);
 			if (child == null) {
 				Node addedNode = new Node(songPart, songTitle);
 				this.children.put(levDistance, addedNode);
 				addedNode.songs.add(songTitle);
-				//System.out.println(addedNode.songs);
-				//System.out.println("-------Added------");
+
 			}
 
 			if (child != null && child.songAtNode != songPart)
@@ -50,14 +42,12 @@ public class BKTree {
 				child.songs.add(songTitle);
 		}
 
-		public Vector<Song> querry(String element, int boundary,
-				HashMap<String, Integer> match, Vector<Song> collectedObjs) {
-			collectedObjs.clear();
-			int distanceAtNode = distance.getDistance(element, this.songAtNode);
-			//System.out.println("~~~~~~~~~~~~~~~"+this.songAtNode+ "******" + distanceAtNode);
-			if (distanceAtNode <= boundary) {
-				match.put(this.songAtNode, distanceAtNode);
+		public void query(String element, int boundary,
+				Vector<Song> collectedObjs) {
 
+			int distanceAtNode = distance.getDistance(element, this.songAtNode);
+
+			if (distanceAtNode <= boundary) {
 				Vector<Song> temp = new Vector<Song>();
 				temp.addAll(this.songs);
 				for (int j = 0; j < songs.size(); j++) {
@@ -71,11 +61,10 @@ public class BKTree {
 					+ distanceAtNode; dist++) {
 				Node child = children.get(dist);
 				if (child != null) {
-					child.querry(element, boundary, match, collectedObjs);
+					child.query(element, boundary, collectedObjs);
 				}
 			}
 
-			return collectedObjs;
 		}
 	}
 
@@ -87,9 +76,7 @@ public class BKTree {
 	public void add(Song element, int mode) {
 
 		String split[];
-		if (mode == 0)
-			split = element.getTitle().toLowerCase().split("\\s+");
-		else if (mode == 1)
+		if (mode == 1)
 			split = element.getAlbum().toLowerCase().split("\\s+");
 		else if (mode == 2)
 			split = element.getArtist().toLowerCase().split("\\s+");
@@ -97,25 +84,13 @@ public class BKTree {
 			split = element.getTitle().toLowerCase().split("\\s+");
 		for (int i = 0; i < split.length; i++) {
 
-			// SongEntry entry = new SongEntry(element, split[i]);
-			String part = split[i];
-			boolean acceptable = true;
-			int j;
-			for (j = 0; j < part.length(); j++) {
-				if (!((part.charAt(j) >= 'a' && part.charAt(j) <= 'z') || (part
-						.charAt(j) >= '0' && part.charAt(j) <= '9'))) {
-					acceptable = false;
-					break;
-				}
-
-			}
-			if (acceptable) {
+			if (isAlphaNum(split[i])) {
 				if (root != null)
-					root.addToTree(part, element);
+					root.addToTree(split[i].toLowerCase(), element);
 				else {
-					root = new Node(part, element);
+					root = new Node(split[i].toLowerCase(), element);
 					root.songs.add(element);
-					System.out.println(root.songAtNode);
+
 				}
 			}
 		}
@@ -123,12 +98,19 @@ public class BKTree {
 	}
 
 	public Vector<Song> query(String search, int boundary) {
-		matches = new HashMap<String, Integer>();
 		Vector<Song> results = new Vector<Song>();
-		root.querry(search, boundary, matches, results);
-		System.out.println("Matches are :  " + results);
+		root.query(search, boundary, results);
 		return results;
 	}
 
-}
+	private boolean isAlphaNum(String s) {
+		s = s.toLowerCase();
+		for (int j = 0; j < s.length(); j++) {
+			if (!((s.charAt(j) >= 'a' && s.charAt(j) <= 'z') || (s.charAt(j) >= '0' && s
+					.charAt(j) <= '9')))
+				return false;
 
+		}
+		return true;
+	}
+}

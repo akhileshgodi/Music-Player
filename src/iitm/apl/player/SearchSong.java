@@ -15,14 +15,10 @@ public class SearchSong {
 	 * @return: Vector<Song>
 	 */
 
-	public static Vector<Song> search(String s, BKTree tree) 
-	{
-		Vector<Song> queryResult = new Vector<Song>();
-		queryResult = tree.query(s,1);
-	
+	public static Vector<Song> search(String s, BKTree tree) {
+
+		Vector<Song> queryResult = tree.query(s, 2);
+
 		return queryResult;
-		
 	}
 }
-
-
