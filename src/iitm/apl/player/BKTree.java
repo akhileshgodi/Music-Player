@@ -40,8 +40,8 @@ public class BKTree {
 				Node addedNode = new Node(songPart, songTitle);
 				this.children.put(levDistance, addedNode);
 				addedNode.songs.add(songTitle);
-				System.out.println(addedNode.songs);
-				System.out.println("-------Added------");
+				//System.out.println(addedNode.songs);
+				//System.out.println("-------Added------");
 			}
 
 			if (child != null && child.songAtNode != songPart)
@@ -54,7 +54,7 @@ public class BKTree {
 				HashMap<String, Integer> match, Vector<Song> collectedObjs) {
 			collectedObjs.clear();
 			int distanceAtNode = distance.getDistance(element, this.songAtNode);
-			System.out.println("~~~~~~~~~~~~~~~"+this.songAtNode+ "******" + distanceAtNode);
+			//System.out.println("~~~~~~~~~~~~~~~"+this.songAtNode+ "******" + distanceAtNode);
 			if (distanceAtNode <= boundary) {
 				match.put(this.songAtNode, distanceAtNode);
 
