@@ -52,9 +52,9 @@ public class BKTree {
 
 		public Vector<Song> querry(String element, int boundary,
 				HashMap<String, Integer> match, Vector<Song> collectedObjs) {
-
+			collectedObjs.clear();
 			int distanceAtNode = distance.getDistance(element, this.songAtNode);
-
+			System.out.println("~~~~~~~~~~~~~~~"+this.songAtNode+ "******" + distanceAtNode);
 			if (distanceAtNode <= boundary) {
 				match.put(this.songAtNode, distanceAtNode);
 
@@ -114,11 +114,11 @@ public class BKTree {
 					root.addToTree(part, element);
 				else {
 					root = new Node(part, element);
+					root.songs.add(element);
 					System.out.println(root.songAtNode);
 				}
 			}
 		}
-		root.songs.add(element);
 		root.addToTree(element.getTitle().toLowerCase(), element);
 	}
 
