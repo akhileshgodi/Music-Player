@@ -2,7 +2,6 @@ package iitm.apl.player;
 
 import java.util.HashMap;
 
-
 import java.util.Vector;
 
 /*
@@ -20,7 +19,7 @@ public class BKTree {
 	 */
 	class Node {
 
-		String songAtNode; 	// Will have the part of the Song Name.
+		String songAtNode; // Will have the part of the Song Name.
 		Vector<Song> songs; // The pointers to all songs which have that part of
 							// the word in the song.
 		HashMap<Integer, Node> children;// And obviously the set of all Nodes
@@ -38,40 +37,43 @@ public class BKTree {
 			int levDistance = distance.getDistance(songPart.toLowerCase(),
 					songAtNode);
 			Node child = children.get(levDistance);
-			if (child == null) 
-			{
+			if (child == null) {
 				Node addedNode = new Node(songPart, songTitle);
 				this.children.put(levDistance, addedNode);
 				addedNode.songs.add(songTitle);
 				System.out.println(addedNode.songs);
 				System.out.println("-------Added------");
-			} 
-			
-			if(child!=null && child.songAtNode!= songPart)
+			}
+
+			if (child != null && child.songAtNode != songPart)
 				child.addToTree(songPart, songTitle);
-			else if(child!=null && child.songAtNode == songPart)
+			else if (child != null && child.songAtNode == songPart)
 				child.songs.add(songTitle);
 		}
 
-
 		public Vector<Song> querry(String element, int boundary,
 				HashMap<String, Integer> match, Vector<Song> collectedObjs) {
-
 
 			int distanceAtNode = distance.getDistance(element, this.songAtNode);
 
 			if (distanceAtNode <= boundary) {
 				match.put(this.songAtNode, distanceAtNode);
+
+					Vector<Song> temp = new Vector<Song>();
+					temp.addAll(this.songs);
+						for(int j = 0 ; j < songs.size(); j++)
+						{
+							if(!collectedObjs.contains(temp.elementAt(j)));	
+								collectedObjs.add(temp.elementAt(j));
+						}	
 				
-				for(int i = 0 ; i < songs.size(); i++)
-					collectedObjs.addAll(songs);
 			}
 
 			for (int dist = distanceAtNode - boundary; dist <= boundary
 					+ distanceAtNode; dist++) {
 				Node child = children.get(dist);
 				if (child != null) {
-					child.querry(element, boundary, match , collectedObjs);
+					child.querry(element, boundary, match, collectedObjs);
 				}
 			}
 
@@ -126,4 +128,3 @@ public class BKTree {
 	}
 
 }
-
