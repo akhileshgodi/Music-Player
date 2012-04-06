@@ -7,10 +7,8 @@ import java.util.Vector;
 /*
  * The Class which implements the operations on the BKTree
  */
-public class BKTree 
-{
+public class BKTree {
 	public Node root;
-	private HashMap<Song, Integer> match;
 	private HashMap<String, Integer> matches;
 
 	private LevenshteinsDistance<String> distance;
@@ -60,14 +58,13 @@ public class BKTree
 			if (distanceAtNode <= boundary) {
 				match.put(this.songAtNode, distanceAtNode);
 
-					Vector<Song> temp = new Vector<Song>();
-					temp.addAll(this.songs);
-						for(int j = 0 ; j < songs.size(); j++)
-						{
-							if(!collectedObjs.contains(temp.elementAt(j)));	
-								collectedObjs.add(temp.elementAt(j));
-						}	
-				
+				Vector<Song> temp = new Vector<Song>();
+				temp.addAll(this.songs);
+				for (int j = 0; j < songs.size(); j++) {
+					if (!collectedObjs.contains(temp.elementAt(j)))
+						collectedObjs.add(temp.elementAt(j));
+				}
+
 			}
 
 			for (int dist = distanceAtNode - boundary; dist <= boundary
@@ -87,15 +84,14 @@ public class BKTree
 		this.distance = distance;
 	}
 
-	public void add(Song element , int mode) 
-	{
+	public void add(Song element, int mode) {
 
 		String split[];
-		if(mode == 0)
+		if (mode == 0)
 			split = element.getTitle().toLowerCase().split("\\s+");
 		else if (mode == 1)
-			split= element.getAlbum().toLowerCase().split("\\s+");
-		else if(mode == 2)
+			split = element.getAlbum().toLowerCase().split("\\s+");
+		else if (mode == 2)
 			split = element.getArtist().toLowerCase().split("\\s+");
 		else
 			split = element.getTitle().toLowerCase().split("\\s+");
@@ -134,8 +130,5 @@ public class BKTree
 		return results;
 	}
 
-	public HashMap<Song, Integer> getMatch() {
-		return match;
-	}
-
 }
+

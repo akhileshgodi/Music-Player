@@ -46,6 +46,7 @@ public class JamPlayer {
 		playerThread = new Thread(player);
 		playerThread.start();
 		searchMode = 0;
+		song = new Vector<Song>();
 	}
 
 	/**
@@ -64,6 +65,7 @@ public class JamPlayer {
 		if (selectedFile.isFile()
 				&& selectedFile.getName().toLowerCase().endsWith(".mp3")) {
 			songs.add(new Song(selectedFile));
+			
 			return songs;
 		} else if (selectedFile.isDirectory()) {
 			for (File file : selectedFile.listFiles(new FilenameFilter() {
@@ -74,9 +76,12 @@ public class JamPlayer {
 			}))
 				songs.add(new Song(file));
 		}
-		song = songs;
+		
 		for (Song it : songs)
+		{	
+			song.add(it);
 			tree.add(it,searchMode);
+		}
 		return songs;
 	}
 
